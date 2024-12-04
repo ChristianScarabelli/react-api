@@ -20,7 +20,7 @@ const InitialFormData = {
 }
 
 // variabile con la rotta base, che esporto per fare facilmente il path giusto delle immagini
-const API_BASE_URI = 'http://localhost:3000/'
+export const API_BASE_URI = 'http://localhost:3000/'
 
 
 export default function Main() {
@@ -117,19 +117,12 @@ export default function Main() {
                 alert(err.response.data.messages.join(' '))
                 console.error(err)
             })
-
-
-        // // aggiorno la variabile di stato con l'array originale e il nuovo post
-        // setPost([...post, newPost])
-        // // svuoto i campi dopo il submit, settando i dati iniziali (vuoti di default)
-        // setFormData(InitialFormData)
     }
 
     // funzione per cancellare i post
     function deletePost(postId) {
         setPost((prevPosts) => prevPosts.filter((post) => post.id !== postId))  // prendo l'array di post e lo ritorno tutto tranne quello il cui id è diverso da quello cliccato
     }
-
 
     const publishedPosts = post.filter((post) => post.published) // meglio fare con filter, per fare poi meno iterazioni dopo
     return (
