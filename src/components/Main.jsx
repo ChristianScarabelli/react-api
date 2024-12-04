@@ -1,7 +1,7 @@
 // esempio immagine https://store-images.s-microsoft.com/image/apps.50670.13727851868390641.c9cc5f66-aff8-406c-af6b-440838730be0.d205e025-5444-4eb1-ae46-571ae6895928?h=862&format=jpg
 
 import Card from './Card/Card.jsx'
-import { posts } from '../data/posts.js'
+// import { posts } from '../data/posts.js'   non importo più dall'array di dati 
 import Tags from './Tags/Tags.jsx'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -11,10 +11,9 @@ import axios from 'axios'
 
 const InitialFormData = {
     title: '',
-    image: undefined,
-    author: '',
-    category: '',
+    slug: '',
     content: '',
+    image: undefined,
     tags: [],
     published: false,
 }
@@ -69,7 +68,7 @@ export default function Main() {
     function addNewPost(event) {        // disattivo la pagina che si aggiorna da sola
         event.preventDefault()
 
-        if (formData.title.trim() === '' || formData.author.trim() === '' || formData.content.trim() === '' || formData.category.trim() === '') return
+        if (formData.title.trim() === '' || formData.slug.trim() === '' || formData.content.trim() === '') return
 
         const newPost = {       // nuovo oggetto post
             id: Date.now(),
@@ -108,15 +107,15 @@ export default function Main() {
                                     name='title' />
                             </div>
                             <div>
-                                <label htmlFor="author">Autore</label>
+                                <label htmlFor="slug">Slug</label>
                                 <input
                                     className='input'
-                                    id='author'
+                                    id='slug'
                                     type="text"
                                     onChange={handleFormData}
                                     placeholder='Nome autore'
-                                    value={formData.author}
-                                    name='author' />
+                                    value={formData.slug}
+                                    name='slug' />
                             </div>
                             <div>
                                 <label htmlFor="content">Contenuto</label>
@@ -139,7 +138,7 @@ export default function Main() {
                                     value={formData.image}
                                     name='image' />
                             </div>
-                            <div>
+                            {/* <div>
                                 <label htmlFor="category">Categoria</label>
                                 <select
                                     id='category'
@@ -152,7 +151,7 @@ export default function Main() {
                                     <option value='cinema'>Cinema</option>
                                     <option value='videogame'>Videogame</option>
                                 </select>
-                            </div>
+                            </div> */}
                             <div>
                                 <label htmlFor="tags">Tags</label>
                                 <input
@@ -192,8 +191,8 @@ export default function Main() {
                                             image={post.image}
                                             title={post.title}
                                             tags={post.tags}
-                                            author={post.author}
-                                            category={post.category}
+                                            slug={post.slug}
+                                            // category={post.category}
                                             content={post.content}
                                             onDelete={() => deletePost(post.id)}
                                         />
