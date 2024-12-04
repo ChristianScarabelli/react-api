@@ -11,12 +11,17 @@ import axios from 'axios'
 
 const InitialFormData = {
     title: '',
-    slug: '',
+    author: '',
     content: '',
+    category: '',
     image: undefined,
     tags: [],
     published: false,
 }
+
+// variabile con la rotta base, che esporto per fare facilmente il path giusto delle immagini
+const API_BASE_URI = 'http://localhost:3000/'
+
 
 export default function Main() {
     const uniqueTags = []
@@ -31,7 +36,8 @@ export default function Main() {
     // variabile di stato per il form, con valore di partenza i campi vuoti
     const [formData, setFormData] = useState(InitialFormData)
 
-    const [post, setPost] = useState(posts)  // variabile di stato per aggiungere un nuovo post all'array originale
+    // variabile di stato per aggiungere un nuovo post all'array originale
+    const [post, setPost] = useState([])  // array vuoto di default, che verrà riempito con il fetch dal server
 
     // reagisco allo spuntare la checkbox del pubblicare un nuovo articolo su un oggetto di stato
     useEffect(() => {
@@ -39,6 +45,25 @@ export default function Main() {
             alert('l\'articolo verrà pubblicato')
         }
     }, [formData.published])
+
+    // funzione per il fetch degli elementi dal server
+    function fetchPosts() {
+        axios.get(`${API_BASE_URI}posts`, {
+            limit: 5,
+        })
+            .then(res => {
+                setPost(res.data)
+            })
+            .catch(err => {
+                console.error(err)
+            })
+    }
+
+    // faccio il Fetch con useEffect "a vuoto", così viene fatto solo una volta all'apertura della pagina
+    useEffect(() => {
+        fetchPosts()
+    }[],)
+
 
     // funzione per gestire i campi del form
     function handleFormData(event) {
@@ -64,21 +89,33 @@ export default function Main() {
         setFormData(newFormData)
     }
 
-    // funzione per aggiungere il nuovo post (con le variabili di stato)
+    // funzione di fetch per aggiungere il nuovo post (con le variabili di stato)
     function addNewPost(event) {        // disattivo la pagina che si aggiorna da sola
         event.preventDefault()
 
         if (formData.title.trim() === '' || formData.slug.trim() === '' || formData.content.trim() === '') return
 
-        const newPost = {       // nuovo oggetto post
+        const newPost = {       // nuovo oggetto post con i dati del form
             id: Date.now(),
             ...formData
         }
 
-        // aggiorno la variabile di stato con l'array originale e il nuovo post
-        setPost([...post, newPost])
-        // svuoto i campi dopo il submit, settando i dati iniziali (vuoti di default)
-        setFormData(InitialFormData)
+        // faccio la chiamata
+        axios.post(`${API_BASE_URI}posts`, newPost)
+            .then(res => {
+                setPost([...post, res.data]) // setter per il nuovo elemento con i dati della res
+                setFormData(InitialFormData)  // riavvio il form
+            })
+            .catch(err => {
+                alert(err.response.data.messages.join(' '))
+                console.error(err)
+            })
+
+
+        // // aggiorno la variabile di stato con l'array originale e il nuovo post
+        // setPost([...post, newPost])
+        // // svuoto i campi dopo il submit, settando i dati iniziali (vuoti di default)
+        // setFormData(InitialFormData)
     }
 
     // funzione per cancellare i post
@@ -107,15 +144,15 @@ export default function Main() {
                                     name='title' />
                             </div>
                             <div>
-                                <label htmlFor="slug">Slug</label>
+                                <label htmlFor="author">Autore</label>
                                 <input
                                     className='input'
-                                    id='slug'
+                                    id='author'
                                     type="text"
                                     onChange={handleFormData}
                                     placeholder='Nome autore'
-                                    value={formData.slug}
-                                    name='slug' />
+                                    value={formData.author}
+                                    name='author' />
                             </div>
                             <div>
                                 <label htmlFor="content">Contenuto</label>
@@ -138,7 +175,7 @@ export default function Main() {
                                     value={formData.image}
                                     name='image' />
                             </div>
-                            {/* <div>
+                            <div>
                                 <label htmlFor="category">Categoria</label>
                                 <select
                                     id='category'
@@ -151,7 +188,7 @@ export default function Main() {
                                     <option value='cinema'>Cinema</option>
                                     <option value='videogame'>Videogame</option>
                                 </select>
-                            </div> */}
+                            </div>
                             <div>
                                 <label htmlFor="tags">Tags</label>
                                 <input
@@ -191,8 +228,8 @@ export default function Main() {
                                             image={post.image}
                                             title={post.title}
                                             tags={post.tags}
-                                            slug={post.slug}
-                                            // category={post.category}
+                                            author={post.author}
+                                            category={post.category}
                                             content={post.content}
                                             onDelete={() => deletePost(post.id)}
                                         />
