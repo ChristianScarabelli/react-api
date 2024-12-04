@@ -24,20 +24,15 @@ const API_BASE_URI = 'http://localhost:3000/'
 
 
 export default function Main() {
-    const uniqueTags = []
-    for (const post of posts) { // per ogni post dell'array di oggetti posts
-        for (const tag of post.tags) { // per ogni array di tags di ogni post
-            if (!uniqueTags.includes(tag)) {
-                uniqueTags.push(tag) // se il tag se non è già presente lo pusho
-            }
-        }
-    }
 
     // variabile di stato per il form, con valore di partenza i campi vuoti
     const [formData, setFormData] = useState(InitialFormData)
 
     // variabile di stato per aggiungere un nuovo post all'array originale
     const [post, setPost] = useState([])  // array vuoto di default, che verrà riempito con il fetch dal server
+
+    // variabile di stato per i tags
+    const [uniqueTags, setUniquetags] = useState([])
 
     // reagisco allo spuntare la checkbox del pubblicare un nuovo articolo su un oggetto di stato
     useEffect(() => {
@@ -49,10 +44,22 @@ export default function Main() {
     // funzione per il fetch degli elementi dal server
     function fetchPosts() {
         axios.get(`${API_BASE_URI}posts`, {
-            limit: 5,
+            params:
+                { limit: 5 }
         })
             .then(res => {
                 setPost(res.data)
+                // all'arrivo dei dati controllo i tags
+                const tags = []
+                res.data.forEach(post => {
+                    post.tags.forEach(tag => {
+                        if (!tags.includes(tag)) {
+                            tags.push(tag)
+                        }
+                    })
+                })
+                // aggiorno la variabile di stato dei tags con i tags presi dalla res
+                setUniquetags(tags)
             })
             .catch(err => {
                 console.error(err)
@@ -62,7 +69,7 @@ export default function Main() {
     // faccio il Fetch con useEffect "a vuoto", così viene fatto solo una volta all'apertura della pagina
     useEffect(() => {
         fetchPosts()
-    }[],)
+    }, [])
 
 
     // funzione per gestire i campi del form
@@ -93,7 +100,7 @@ export default function Main() {
     function addNewPost(event) {        // disattivo la pagina che si aggiorna da sola
         event.preventDefault()
 
-        if (formData.title.trim() === '' || formData.slug.trim() === '' || formData.content.trim() === '') return
+        if (formData.title.trim() === '' || formData.author.trim() === '' || formData.content.trim() === '') return
 
         const newPost = {       // nuovo oggetto post con i dati del form
             id: Date.now(),
@@ -183,10 +190,10 @@ export default function Main() {
                                     value={formData.category}
                                     name='category'
                                     onChange={handleFormData}>
-                                    <option value="" selected>Seleziona una categoria</option>
-                                    <option value='informatica'>Informatica</option>
-                                    <option value='cinema'>Cinema</option>
-                                    <option value='videogame'>Videogame</option>
+                                    <option value="">Seleziona una categoria</option>
+                                    <option value='ricetta vegetariana'>Ricetta vegetariana</option>
+                                    <option value='ricetta al forno'>Ricetta al forno</option>
+                                    <option value='primo piatto'>Primo piatto</option>
                                 </select>
                             </div>
                             <div>
