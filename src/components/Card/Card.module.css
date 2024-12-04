@@ -1,0 +1,44 @@
+.card {
+    max-width: 400px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.thumb {
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.body {
+    background-color: white;
+    padding: 16px;
+    overflow: hidden;
+}
+
+.title {
+    margin-bottom: 10px;
+}
+
+.description {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    text-align: start;
+    word-wrap: break-word;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.author {
+    margin-bottom: 10px;
+}
+
+.category {
+    margin-bottom: 10px;
+}

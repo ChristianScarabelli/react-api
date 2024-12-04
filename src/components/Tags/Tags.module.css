@@ -1,0 +1,31 @@
+.tags_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: white;
+}
+
+/* Colori specifici per i tag */
+.tag_html {
+    background-color: #e34c26;
+}
+
+.tag_css {
+    background-color: #264de4;
+}
+
+.tag_js {
+    background-color: #f0db4f;
+    color: #323330;
+}
+
+.tag_php {
+    background-color: rgb(89, 209, 209);
+}

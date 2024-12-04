@@ -1,0 +1,118 @@
+/* RESET RULES  */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  aspect-ratio: 4/3;
+  display: block;
+}
+
+/* LAYOUT  */
+
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.page-title {
+  text-align: center;
+  font-weight: lighter;
+  font-size: 50px;
+  padding: 1.2em 0 1.5em 0;
+}
+
+.form-title {
+  padding: 1.2em 50px 1.5em 0;
+  text-align: end;
+}
+
+main {
+  background-color: rgb(244, 244, 244);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 1.5rem;
+  margin: 0 -0.75rem;
+}
+
+.row>* {
+  padding: 0 0.75rem;
+  width: 100%;
+}
+
+.col-6 {
+  width: 50%;
+}
+
+.posts_section {
+  padding-bottom: 50px;
+}
+
+.tags_stripe {
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* FORM  */
+
+.form {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-right: 50px;
+}
+
+.input,
+.input.select,
+.input.checkbox,
+.input.submit {
+  padding: 4px 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-left: 10px;
+}
+
+.input.checkbox {
+  margin-left: 5px;
+}
+
+.input.select {
+  background-color: white;
+  color: grey;
+}
+
+.input.submit {
+  background-color: rgb(231, 227, 227);
+}
+
+.input:hover {
+  cursor: pointer;
+  color: rgb(134, 133, 170);
+  border-color: rgb(194, 193, 243);
+}
