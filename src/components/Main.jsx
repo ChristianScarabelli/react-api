@@ -1,7 +1,6 @@
 // esempio immagine https://store-images.s-microsoft.com/image/apps.50670.13727851868390641.c9cc5f66-aff8-406c-af6b-440838730be0.d205e025-5444-4eb1-ae46-571ae6895928?h=862&format=jpg
 
 import Card from './Card/Card.jsx'
-// import { posts } from '../data/posts.js'   non importo più dall'array di dati 
 import Tags from './Tags/Tags.jsx'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -45,7 +44,7 @@ export default function Main() {
     function fetchPosts() {
         axios.get(`${API_BASE_URI}posts`, {
             params:
-                { limit: 5 }
+                { limit: 7 }
         })
             .then(res => {
                 setPost(res.data)
@@ -107,21 +106,34 @@ export default function Main() {
             ...formData
         }
 
+        console.log('Nuovo post:', newPost) // il nuovo post viene creato
+
         // faccio la chiamata
         axios.post(`${API_BASE_URI}posts`, newPost)
             .then(res => {
+                console.log('Risposta API POST:', res.data) // i dati arrivano
                 setPost([...post, res.data]) // setter per il nuovo elemento con i dati della res
+                console.log('Array con i nuovi post:', post) // c'è il nuovo post 
                 setFormData(InitialFormData)  // riavvio il form
             })
             .catch(err => {
-                alert(err.response.data.messages.join(' '))
                 console.error(err)
             })
     }
 
     // funzione per cancellare i post
-    function deletePost(postId) {
-        setPost((prevPosts) => prevPosts.filter((post) => post.id !== postId))  // prendo l'array di post e lo ritorno tutto tranne quello il cui id è diverso da quello cliccato
+    function deletePost(id) {
+        console.log(id)
+        axios.delete(`${API_BASE_URI}post/${id}`)
+            .then(() => {
+                console.log('Post eliminato:', res.data)
+                // setPost(prevPosts => prevPosts.filter(post => post.id !== id))
+                fetchPosts()
+            })
+            .catch((err) => {
+                console.error(err)
+                alert('Non è stato possibile eliminare la risorsa selezionata.')
+            })
     }
 
     const publishedPosts = post.filter((post) => post.published) // meglio fare con filter, per fare poi meno iterazioni dopo
