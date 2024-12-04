@@ -13,19 +13,39 @@
 }
 
 /* Colori specifici per i tag */
-.tag_html {
+.tag_dolci {
     background-color: #e34c26;
 }
 
-.tag_css {
+.tag_torte {
     background-color: #264de4;
 }
 
-.tag_js {
+.tag_antipasti {
+    background-color: rgb(89, 209, 209);
+}
+
+.tag_ricette_vegetariane {
     background-color: #f0db4f;
     color: #323330;
 }
 
-.tag_php {
-    background-color: rgb(89, 209, 209);
+.tag_ricette_al_forno {
+    background-color: rgb(16, 36, 16);
+}
+
+.tag_primi_piatti {
+    background-color: rgb(93, 79, 24);
+}
+
+.tag_dolci_veloci {
+    background-color: rgb(201, 89, 209);
+}
+
+.tag_ricette_veloci {
+    background-color: rgb(209, 203, 89);
+}
+
+.tag_dolci_al_cioccolato {
+    background-color: rgb(101, 209, 89);
 }
