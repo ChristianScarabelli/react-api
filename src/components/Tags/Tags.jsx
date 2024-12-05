@@ -4,7 +4,7 @@ export default function Tags({ tags = [] }) {
     return (
         tags.length > 0 && ( // Mostro i tag solo se esistono
             <div className={style.tags_container}>
-                {tags.map((tag, index) => {      // Apro un blocco di codice nella callback
+                {tags.map((tag, index) => {
                     const formattedTag = tag.toLowerCase().replaceAll(' ', '_')      // Formattazione del tag
                     return (
                         <span

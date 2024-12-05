@@ -14,7 +14,7 @@ const InitialFormData = {
     content: '',
     category: '',
     image: undefined,
-    tags: [],
+    tags: '',
     published: false,
 }
 
@@ -47,7 +47,7 @@ export default function Main() {
     function fetchPosts() {
         axios.get(`${API_BASE_URI}posts`, {
             params:
-                { limit: 7 },
+                { limit: 10 },
         })
             .then(res => {
                 setPosts(res.data.filter((post) => post.published))  // prendo tutti i dati e li metto nel setter dei post, filtrando i post per la proprietà published
@@ -85,15 +85,11 @@ export default function Main() {
         // se l'elemento che da l'imput è di tipo checkbox, la imposto su checkata, altrimenti prendo il valore di testo inserito nel form
         const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
 
-        // Variabile = a key, ma se key uguale a 'tags', separo con virgola e trasformo la stringa in un array, altrimenti metto value normale
-        const newValue = key === 'tags' ? value.split(',').map(tag => tag.trim()) : value
-
-
         // nuovo oggetto che contiene i campi del form di partenza 
         // più gli imput dinamici del form
         const newFormData = {
             ...formData,
-            [key]: newValue,   // key va nelle graffe altrimenti verrebbe interpretato come una propiretà di nome key
+            [key]: value,   // key va nelle graffe altrimenti verrebbe interpretato come una propiretà di nome key
         }
 
         // cambio la variabile di stato che contiene i dati di default del form
@@ -109,6 +105,7 @@ export default function Main() {
 
         const newPost = {       // nuovo oggetto post con i dati del form
             ...formData,
+            tags: formData.tags.split(',').map(tag => tag.trim()) // splitto le stringhe  e trasformo i tags in array trimmato
         }
 
         console.log('Nuovo post:', newPost) // il nuovo post viene creato
@@ -218,7 +215,7 @@ export default function Main() {
                                     name='tags'
                                     onChange={handleFormData}
                                     placeholder='Inserisci i tag separati da virgola'
-                                    value={formData.tags.join(', ')} // Trasforma l'array di tag in una stringa
+                                    value={formData.tags} // Trasforma l'array di tag in una stringa
                                 />
                             </div>
                             <div>
