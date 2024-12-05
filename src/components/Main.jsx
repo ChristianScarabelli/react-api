@@ -28,7 +28,10 @@ export default function Main() {
     const [formData, setFormData] = useState(InitialFormData)
 
     // variabile di stato per aggiungere un nuovo post all'array originale
-    const [post, setPost] = useState([])  // array vuoto di default, che verrà riempito con il fetch dal server
+    const [posts, setPosts] = useState([])  // array vuoto di default, che verrà riempito con il fetch dal server
+
+    // variabile di stato per i post pubblicati 
+    // const [publishedPosts, setPublishedPosts] = useState([])  // array vuoto di default, che verrà riempito con il fetch dal server
 
     // variabile di stato per i tags
     const [uniqueTags, setUniquetags] = useState([])
@@ -44,13 +47,16 @@ export default function Main() {
     function fetchPosts() {
         axios.get(`${API_BASE_URI}posts`, {
             params:
-                { limit: 7 }
+                { limit: 7 },
         })
             .then(res => {
-                setPost(res.data)
-                // all'arrivo dei dati controllo i tags
+                setPosts(res.data.filter((post) => post.published))  // prendo tutti i dati e li metto nel setter dei post, filtrando i post per la proprietà published
+
+                // setPublishedPosts(res.data.filter((post) => post.published))   // assegno al setter dei post pubblici i dati filtrati
+
+                // all'arrivo dei dati controllo i tags dei post pubblicati
                 const tags = []
-                res.data.forEach(post => {
+                posts.forEach(post => {
                     post.tags.forEach(tag => {
                         if (!tags.includes(tag)) {
                             tags.push(tag)
@@ -102,18 +108,19 @@ export default function Main() {
         if (formData.title.trim() === '' || formData.author.trim() === '' || formData.content.trim() === '') return
 
         const newPost = {       // nuovo oggetto post con i dati del form
-            id: Date.now(),
-            ...formData
+            ...formData,
         }
 
         console.log('Nuovo post:', newPost) // il nuovo post viene creato
 
-        // faccio la chiamata
+        // faccio la chiamata per aggiungere e renderizzare il nuovo post
         axios.post(`${API_BASE_URI}posts`, newPost)
             .then(res => {
                 console.log('Risposta API POST:', res.data) // i dati arrivano
-                setPost([...post, res.data]) // setter per il nuovo elemento con i dati della res
-                console.log('Array con i nuovi post:', post) // c'è il nuovo post 
+                // metto il nuovo post arrivato con i dati nell'array principale (con solo i post pubblici)
+                setPosts([...posts, res.data])
+
+                console.log('Array con i nuovi post:', posts) // c'è il nuovo post 
                 setFormData(InitialFormData)  // riavvio il form
             })
             .catch(err => {
@@ -124,8 +131,10 @@ export default function Main() {
     // funzione per cancellare i post
     function deletePost(id) {
         console.log(id)
-        axios.delete(`${API_BASE_URI}post/${id}`)
-            .then(() => {
+        const confirmDelete = confirm('Sei sicuro di eliminare il post?')
+        // if (confirmDelete === true) {...}
+        confirmDelete && axios.delete(`${API_BASE_URI}posts/${id}`)
+            .then((res) => {
                 console.log('Post eliminato:', res.data)
                 // setPost(prevPosts => prevPosts.filter(post => post.id !== id))
                 fetchPosts()
@@ -136,7 +145,6 @@ export default function Main() {
             })
     }
 
-    const publishedPosts = post.filter((post) => post.published) // meglio fare con filter, per fare poi meno iterazioni dopo
     return (
         <>
             <main>
@@ -232,21 +240,22 @@ export default function Main() {
                         </div>
                     </div>
                     <div className='container'>
-                        {publishedPosts.length ? ( // Se ci sono post
+                        {posts.length ? ( // Se ci sono post
                             <div className="row">
-                                {publishedPosts.map((post) =>
-                                    <div key={post.id} className="col-6">
-                                        <Card
-                                            image={post.image}
-                                            title={post.title}
-                                            tags={post.tags}
-                                            author={post.author}
-                                            category={post.category}
-                                            content={post.content}
-                                            onDelete={() => deletePost(post.id)}
-                                        />
-                                    </div>
-                                )}
+                                {posts
+                                    .map((post) =>
+                                        <div key={post.id} className="col-6">
+                                            <Card
+                                                image={post.image}
+                                                title={post.title}
+                                                tags={post.tags}
+                                                author={post.author}
+                                                category={post.category}
+                                                content={post.content}
+                                                onDelete={() => deletePost(post.id)}
+                                            />
+                                        </div>
+                                    )}
                             </div>
                         ) : (
                             <p>No posts available</p> // Se l'array `posts` è vuoto
